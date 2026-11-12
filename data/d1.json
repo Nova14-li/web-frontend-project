@@ -1,0 +1,79 @@
+{
+  "title": "难点 1 · 每一层递归都有独立的栈帧",
+  "summary": "函数调用自身时，系统为每一层压入一张栈帧：参数和局部变量各存一份。调用时压栈，返回时弹栈。",
+  "code": [
+    "int fib(int n) {",
+    "    if (n <= 1) return n;",
+    "    return fib(n - 1) + fib(n - 2);",
+    "}"
+  ],
+  "codeHint": "实底=当前行 · 虚线框=即将执行",
+  "param": {
+    "name": "n",
+    "label": "递归参数 n",
+    "min": 1,
+    "max": 10,
+    "default": 3,
+    "hint": "n 决定最大栈深与栈帧总数：改 n 后整条调用序列会重新生成。动画速度只影响播放节奏，不影响结果。"
+  },
+  "legend": [
+    { "state": "run", "label": "执行中" },
+    { "state": "wait", "label": "等待子调用" },
+    { "state": "done", "label": "已返回" }
+  ],
+  "steps": [
+    {
+      "id": "enter",
+      "line": 2,
+      "text": "main 调用 fib({n})：第一张栈帧入栈，参数 n = {n} 是这一层自己的拷贝。"
+    },
+    {
+      "id": "push",
+      "line": 2,
+      "text": "压入 fib({n})：第 {depth} 张独立栈帧。这一层的 n = {n} 与上面几层同时存在，互不影响。"
+    },
+    {
+      "id": "test",
+      "line": 3,
+      "call": "fib(n - 1)",
+      "text": "fib({n}) 的 n = {n} > 1，执行第 3 行：先算加号左边的 fib({m})，本层转入等待。"
+    },
+    {
+      "id": "base",
+      "line": 2,
+      "text": "n = {n} <= 1 成立，fib({n}) 直接 return {n}，这张卡片变为已返回。"
+    },
+    {
+      "id": "backLeft",
+      "line": 3,
+      "call": "fib(n - 2)",
+      "text": "fib({m}) 弹栈，{value} 落回 fib({n}) 的加号左侧。fib({n}) 的 n 仍是 {n}，接着算右槽 fib({r})。"
+    },
+    {
+      "id": "backRight",
+      "line": 3,
+      "text": "fib({m}) 弹栈，{value} 落回 fib({n}) 的加号右侧。两个槽都满了，本层可以求和。"
+    },
+    {
+      "id": "sum",
+      "line": 3,
+      "text": "fib({n}) 两槽齐全：{a} + {b} = {sum}，本层算出 {sum}。"
+    },
+    {
+      "id": "done",
+      "line": 4,
+      "text": "最后一张帧弹出，栈空，main 收到 fib({n}) = {sum}。全程最大栈深 {depth}，一共调用 {calls} 次。"
+    }
+  ],
+  "frame": {
+    "retFirst": "main 的调用处",
+    "retLeft": "第 {line} 行 加号左侧",
+    "retRight": "第 {line} 行 加号右侧",
+    "noteEnter": "刚入栈，n = {n} 是本层自己的拷贝",
+    "noteWaitLeft": "等 fib({m}) 的结果",
+    "noteWaitRight": "左槽 {a}，等右槽 fib({m})",
+    "noteBase": "n <= 1 成立，返回 {n}",
+    "noteBackRight": "右槽 {b}，两槽齐全",
+    "noteSum": "{a} + {b} = {sum}，返回 {sum}"
+  }
+}
