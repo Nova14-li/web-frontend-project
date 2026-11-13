@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>难点 1 · 每一层递归都有独立的栈帧</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/d1.css">
+</head>
+<body>
+  <header class="topbar">
+    <span class="brand">递归与调用栈</span>
+    <span class="tag">难点 1 / 3 · 调用栈帧</span>
+  </header>
+
+  <main class="wrap">
+    <!-- 标题与一句话说明：内容由 d1.json 注入 -->
+    <h1 id="title" class="page-title"></h1>
+    <p id="summary" class="page-summary"></p>
+
+    <!-- 顶部解说条：随单步更新 -->
+    <p id="narration" class="narration" aria-live="polite"></p>
+
+    <section class="stage">
+      <!-- 左：代码区，行由 JSON 的 code 数组生成 -->
+      <div class="panel">
+        <div class="panel-head">代码<span class="muted">当前执行行高亮</span></div>
+        <ol id="code" class="code"></ol>
+      </div>
+
+      <!-- 右：调用栈区，帧由当前 step 的 stack 生成（栈底在下，栈顶在上） -->
+      <div class="panel">
+        <div class="panel-head">调用栈<span id="depth" class="muted"></span></div>
+        <ul id="stack" class="stack"></ul>
+      </div>
+    </section>
+
+    <!-- 图例：三色对应三种帧状态，文字来自 JSON -->
+    <div id="legend" class="legend"></div>
+
+    <!-- 控件栏与参数区 -->
+    <div class="controls">
+      <button type="button" data-act="reset">重置</button>
+      <button type="button" data-act="prev">单步回退</button>
+      <button type="button" data-act="play">播放</button>
+      <button type="button" data-act="next">单步前进</button>
+      <span id="counter" class="counter"></span>
+      <label class="param">
+        <span id="param-label"></span>
+        <input id="param-input" type="number" inputmode="numeric">
+      </label>
+    </div>
+
+    <p id="hint" class="hint"></p>
+    <p id="status" class="status" role="alert"></p>
+  </main>
+
+  <script src="js/common.js"></script>
+  <script src="js/d1.js"></script>
+</body>
+</html>

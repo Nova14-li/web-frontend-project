@@ -1,0 +1,136 @@
+/* ---------- 2.1 顶部解说条：一句话随单步更新（只有难点 1 有此条） ---------- */
+.narration {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  min-height: 46px;
+  border: 1px solid #f2e2c4;
+  border-left: 3px solid var(--run);
+  border-radius: 0 10px 10px 0;
+  background: #fffaef;
+  font-size: 15px;
+}
+
+/* ---------- 2.2 左代码 + 右调用栈：常规宽度恒为两栏，只有手机才上下排 ---------- */
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
+  gap: 16px;
+  align-items: start;
+}
+
+/* ---------- 2.3 行内再圈一层：即将执行的那个调用（虚线框 + 浅底 + 出现时闪一下） ---------- */
+.code .call {
+  border-radius: 4px;
+  outline: 2px dashed #b8690a;
+  outline-offset: 2px;
+  background: rgba(217, 139, 28, .24);
+  animation: mark .7s ease-out;
+}
+
+@keyframes mark {
+  from { background: rgba(217, 139, 28, .62); outline-color: #8a4c00; }
+  to   { background: rgba(217, 139, 28, .24); outline-color: #b8690a; }
+}
+
+/* ---------- 2.4 调用栈容器 ---------- */
+/* column-reverse 让数组第一项（栈底）落在下方，栈顶自然在上，帧向上生长 */
+.stack {
+  margin: 0;
+  padding: 14px;
+  list-style: none;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  min-height: 300px;
+}
+
+/* 栈底基线：column-reverse 下 ::before 是首个元素，正好贴在最下方 */
+.stack::before {
+  content: "栈底";
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #a3aec0;
+}
+
+/* ---------- 2.5 栈帧卡片 ---------- */
+/* --h / --l 由 JS 按深度写入，越深色相越冷（蓝 → 靛）、底色越实 */
+.frame {
+  --h: 210;
+  --l: 97%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: hsl(var(--h) 68% var(--l));
+  border: 1px solid hsl(var(--h) 40% 86%);
+  border-left: 3px solid var(--wait);
+}
+.frame.state-run  { border-left-color: var(--run); }
+.frame.state-done { border-left-color: var(--done); }
+
+.frame-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font: 14px/1.4 "Cascadia Code", Consolas, monospace;
+}
+.frame-note { margin: 4px 0 0; font-size: 13px; color: #45526b; }
+.frame-ret  { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+
+/* 帧状态徽章：文字来自图例映射 */
+.badge {
+  font: 600 11.5px/1 "Segoe UI", sans-serif;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--wait);
+  white-space: nowrap;
+}
+.state-run  .badge { background: #c47c11; }
+.state-done .badge { background: #0d8a5a; }
+
+/* 栈顶角标：底色与卡片相同，压住卡片上边框，看起来像贴了张标签 */
+.frame.top { position: relative; }
+.frame.top::after {
+  content: "栈顶";
+  position: absolute;
+  top: -9px;
+  left: 12px;
+  padding: 0 6px;
+  background: hsl(var(--h) 68% var(--l));
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+/* ---------- 2.6 图例：三种颜色对应三种帧状态（只有难点 1 画面有） ---------- */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.chip { display: inline-flex; align-items: center; gap: 6px; }
+.chip::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--wait);
+}
+.chip.state-run::before  { background: #c47c11; }
+.chip.state-done::before { background: #0d8a5a; }
+
+/* ---------- 2.7 d1 专用响应式：两栏压缩、手机才上下排 ---------- */
+@media (max-width: 760px) {
+  .stage { gap: 12px; }
+  .frame { padding: 8px 10px; }
+}
+
+@media (max-width: 520px) {
+  .stage { grid-template-columns: minmax(0, 1fr); }
+  .stack { min-height: 220px; }
+}
