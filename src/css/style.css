@@ -8,7 +8,6 @@
   --run: #d98b1c;
   --wait: #8b98ad;
   --done: #12a06a;
-  --shadow: 0 10px 24px rgba(23, 32, 58, .06), 0 1px 2px rgba(23, 32, 58, .05);
   --radius: 14px;
 }
 
@@ -32,12 +31,11 @@ body {
   padding: 14px 24px;
   border-bottom: 1px solid var(--line);
   background: rgba(255, 255, 255, .82);
-  backdrop-filter: blur(8px);
   position: sticky;
   top: 0;
   z-index: 10;
 }
-.brand { font-weight: 700; letter-spacing: .5px; }
+.brand { font-weight: 700; }
 .tag { font-size: 13px; color: var(--muted); }
 
 /* ---------- 1.4 页面容器与标题 ---------- */
@@ -54,7 +52,6 @@ body {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
   overflow: hidden;
   min-width: 0; /* 允许 grid 子项被压缩，避免长代码撑破布局 */
 }
@@ -126,12 +123,10 @@ button {
   border-radius: 10px;
   border: 1px solid #d7deec;
   background: #fff;
-  box-shadow: 0 1px 2px rgba(23, 32, 58, .05);
   cursor: pointer;
-  transition: background .15s, border-color .15s, transform .05s;
+  transition: background .15s, border-color .15s;
 }
 button:hover:not(:disabled) { background: #f4f7ff; border-color: #bfcbe2; }
-button:active:not(:disabled) { transform: translateY(1px); }
 button:disabled { opacity: .45; cursor: not-allowed; }
 button[data-act="play"] {
   background: #2b4573;
