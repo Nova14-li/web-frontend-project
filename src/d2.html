@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>难点 2 · return 之后回到调用点的下一行</title>
+        <link rel="stylesheet" href="./d2.css">
+        <link rel="stylesheet" href="./css/style.css">
+    </head>
+    <body>
+        <header class="topbar">
+            <span class="brand">递归与调用栈</span>
+            <span class="tag">难点 2 / 3 · 返回地址与回溯</span>
+        </header>
+
+        <main class="wrap">
+            <div class="page-head">
+                <div>
+                    <h1 id="title" class="page-title"></h1>
+                    <p id="summary" class="page-summary"></p>
+                </div>
+
+                <div class="scordbord">
+                    <span id="streak" class="score score-good"></span>
+                    <span id="wrong" class="score score-bad"></span>
+                </div>
+            </div>
+
+                <p id="narration" class="narration" aria-live="polite"></p>
+
+            <section id="stage" class="stage">
+
+                <svg id="back-lines" class="back-lines" aria-hidden="true"></svg>
+            
+            <div class="panel">
+
+                    <div class="panel-head">代码<span class="muted code-hint" id="code-hint"></span></div>
+                    <div id="code" class="code"></div>
+
+                </div>
+                <div class="panel">
+                    <div class="panel-head">调用栈<span id="depth" class="muted"></span></div>
+                    <ul id="stack" class="stack"></ul>
+
+            </div>
+
+                <div class="panel">
+                    <div class="panel-head">组装台<span class="muted code-hint" id="asm-hint"></span></div>
+                    <div id="assembly" class="assembly"></div>
+                </div>  
+            </section>
+
+            <section id="quiz" class="quiz" hidden aria-live="polite">
+                <div class="quize-head">
+                    <span id="quiz-topic" class="quiz-topic"></span>
+                    <span id="quiz-copy" class="quiz-copy"></span>
+                </div>
+                <div id="options" class="options" role="radiogroup" aria-label="返回值回到哪一处"></div>
+                <div class="quiz-actions">
+                    <button type="button" id="confirm">确认</button>
+                    <span id="quiz-feedback" class="feedback"></span>
+                </div>
+            </section>
+            <div class="controls">
+                <button type="button" id="start-btn" class="start-btn" hidden></button>
+                <button type="button" id="restart-btn" class="ghost">重新开始</button>
+                <button type="button" id="back-btn" class="ghost">回到上一题</button>
+                <button type="button" id="replay-btn" class="ghost">回放回溯路径</button>
+                <span id="counter" class="counter"></span>
+
+                <span id="run-flag" class="run-flag" hidden></span>
+                <label class="param">
+                    <span id="param-label"></span>
+                    <input id="param-input" type="number" inputmode="numeric">
+                </label>
+                <label class="switch">
+                    <input id="hint-toggle" type="checkbox" checked>
+                    <span id="hint-label"></span>
+                </label>
+            </div>
+
+            <p id="hint" class="hint"></p>
+            <p id="status" class="status" role="alert"></p>
+
+            <section id="replay-panel" class="panel replay" hidden>
+                <div class="panel-head">回溯路径<span class="muted code-hint" id="replay-hint"></span></div>
+                <div class="replay-body" id="replay-body"></div>
+            </section>
+            <div id="fly-layer" class="fly-layer" aria-hidden="true"></div>
+
+            <script src="js/common.js"></script>
+            <script src="js/d2.js"></script>
+        </main>
+
+    </body>
+
+</html>
