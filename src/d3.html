@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>难点 3 · 调用次数与栈深</title>
+        <link rel="stylesheet" href="./d3.css">
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <header class="topbar">
+            <span class="brand">递归与调用栈</span>
+            <span class="tag">难点 3 / 3 · 时间与空间代价</span>
+        </header>
+
+        <main class="wrap"> 
+            <h1 id="title" class="page-title"></h1>
+            <p id="summary" class="page-summary"></p>  
+            
+            <section class="d3-top">
+                <div class="panel param-card">
+                    <div class="panel-head">参数<span class="code-hint" id="param-hint"></span></div>
+                    <div class="panel-body">
+                        <label class="n-label" id="param-label" for="n-range"></label>
+                        <div class="n-value"><span id="n-value"></span><small>n</small></div>
+                        <input id="n-range" type="range" min="1" max="32" step="1" value="5">
+                        <div class="range-scale"><span id="range-min"></span><span id="range-max"></span></div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label" id="calls-label"></span>
+                        <span class="stat-num" id="calls-value"></span>
+                        <span class="stat-unit" id="calls-unit"></span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label" id="depth-label"></span>
+                        <span class="stat-num" id="depth-value"></span>
+                        <span class="stat-unit" id="depth-unit"></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel chart-panel">
+                <div class="panel-head">调用次数 vs 栈深<span class="code-hint" id="chart-hint"></span></div>
+                <div class="chart-wrap"><canvas id="chart"></canvas></div>
+                <div class="chart-foot">
+                    <div class="legend" id="chart-legend"></div>
+                    <button type="button" id="scale-toggle" class="ghost"></button>
+                </div>
+                <p class="chart-note" id="chart-note"></p>
+            </section>
+
+            <p id="warning" class="warning" role="alert"></p>
+
+            <!-- 下半：实测窗口 + 现实时间换算 -->
+            <div class="d3-bottom">
+                <section class="panel">
+                    <div class="panel-head">实测窗口<span class="code-hint" id="run-hint"></span></div>
+                    <div class="panel-body">
+                        <div class="run-row">
+                            <span class="run-counter" id="run-counter"></span>
+                            <span class="run-time" id="run-time"></span>
+                        </div>
+                        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar">
+                            <div class="bar-fill" id="bar-fill"></div>
+                        </div>
+                        <div class="run-actions">
+                            <button type="button" id="run-btn"></button>
+                            <span class="run-status" id="run-status"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-head">现实时间换算<span class="code-hint" id="convert-hint"></span></div>
+                    <div class="panel-body convert-body">
+                        <p class="convert-text" id="convert-text"></p>
+                        <p class="convert-compare" id="convert-compare"></p>
+                        <label class="param">
+                            <span id="rate-label"></span>
+                            <input id="rate-input" type="number" inputmode="numeric" step="1000">
+                        </label>
+                        <p class="hint" id="rate-hint"></p>
+                    </div>
+                </section>
+            </div>
+
+            <p class="hint" id="formula"></p>
+            <p id="status" class="status" role="alert"></p>
+        </main>
+
+        <script src="js/common.js"></script>
+        <script src="js/d3.js"></script>
+        </main>     
+    </body>
+</html>

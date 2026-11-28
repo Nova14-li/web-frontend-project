@@ -1,0 +1,171 @@
+{
+  "title": "难点 2 · return 之后回到调用点的下一行",
+  "summary": "return 不会回到函数开头，而是回到「调用它的那一行」。程序每算出一个值就停下来等你：在代码上指出它该回到哪一处，指对了，值才会被投递进去。",
+  "start": {
+    "button": "开始演示",
+    "hint": "点「开始演示」后程序才往下跑，每步约 {pace} 秒，到 return 点会停下等你作答",
+    "running": "运行中",
+    "runningTitle": "程序自己在往下走；到 return 点会停下等你作答",
+    "again": "已回到第 1 步：按「开始演示」继续，或先改 n。"
+  },
+  "code": [
+    "int fib(int n) {",
+    "    if (n <= 1) return n;",
+    "    return fib(n - 1) + fib(n - 2);",
+    "}"
+  ],
+  "codeHint": "实底=当前行 · 下划线=正在执行的调用",
+  "param": {
+    "name": "n",
+    "label": "递归参数 n",
+    "min": 2,
+    "max": 5,
+    "default": 3,
+    "hint": "n 决定要判定多少次返回：n=2 有 2 次、n=3 有 4 次、n=5 有 14 次。提示开着先走一遍，看清「↩」那一行和连线的对应；关掉提示再走一遍，就只能靠代码自己推断了。"
+  },
+  "hintToggle": {
+    "label": "显示返回地址（提示）",
+    "off": "提示已关：连线和帧上的「↩」都收起来了，只能靠代码第 3 行自己推断。"
+  },
+  "score": {
+    "streak": "连对 {n} 次",
+    "wrong": "本题已错 {n} 次",
+    "progress": "返回判定 {done} / {total}"
+  },
+  "states": {
+    "run": "执行中",
+    "wait": "等待子调用",
+    "done": "已返回"
+  },
+  "assembly": {
+    "hint": "只画此刻在等返回值的那一条",
+    "depth": "第 {depth} 层",
+    "idle": "栈里没有正在等的帧",
+    "waiting": "待填",
+    "aLabel": "左槽",
+    "bLabel": "右槽",
+    "more": "栈里还有 {n} 层在等"
+  },
+  "ask": {
+    "topic": "第 {index} 次返回判定",
+    "copy": "fib({child}) 刚算出 {value}。程序接下来从代码的哪一处继续？",
+    "needAnswer": "先指认它回到哪一处，值才会被投递。",
+    "noPrev": "这已经是第一次返回判定了。",
+    "feedback": {
+      "correct": "对了：{value} 回到第 {line} 行{side}，落进 fib({k}) 的{slotName}。帧上「↩」那一行写的就是这个地址。",
+      "restart": "回到函数开头，等于把 fib({k}) 重新执行一遍；它又会调用 fib({k} - 1)，算完还是回到这里——这个循环永远结束不了，栈只会越堆越高。",
+      "leftWrong": "这一次 fib({k}) 的左槽已经填好了，它在等右槽。回到左槽等于把一个值填两遍，右槽永远是空的。",
+      "rightWrong": "加号右边要等左边算完才执行，此时 fib({k}) 的左槽还空着，轮到右槽还早。"
+    },
+    "reveal": "正确位置已标出。",
+    "retry": "先在三个位置里选一个。"
+  },
+  "counterExample": {
+    "badge": "错误示范",
+    "title": "如果返回到函数开头……",
+    "lines": [
+      "fib({k}) 从头开始执行",
+      "又调用 fib({k} - 1)，再算一遍",
+      "算完还是回到开头",
+      "→ 无限重算，栈越堆越高"
+    ]
+  },
+  "frame": {
+    "retMain": "main 的调用处",
+    "retLeft": "第 3 行 加号左侧",
+    "retRight": "第 3 行 加号右侧",
+    "noteEnter": "刚入栈，等第 3 行的判断",
+    "noteBase": "n <= 1，直接返回 {value}",
+    "noteWaitLeft": "等 fib({m}) 返回",
+    "noteWaitRight": "左槽 a = {a}，等 fib({m}) 返回",
+    "noteFillLeft": "左槽 a = {a}，接着算右槽 fib({m})",
+    "noteFillRight": "a = {a}，b = {b}，两槽齐全",
+    "noteSum": "{a} + {b} = {sum}，返回 {sum}"
+  },
+  "steps": [
+    {
+      "id": "enter",
+      "line": 2,
+      "text": "main 调用 fib({n})：第一张帧入栈，帧上记着返回地址「main 的调用处」。"
+    },
+    {
+      "id": "push",
+      "line": 2,
+      "text": "压入 fib({n})（第 {depth} 层）：它的返回地址是「{ret}」——算完之后就回到那里，不是回到函数开头。"
+    },
+    {
+      "id": "base",
+      "line": 2,
+      "text": "n = {n} <= 1 成立，fib({n}) 直接 return {value}。卡片还留在栈上，等父调用把它取走。"
+    },
+    {
+      "id": "callLeft",
+      "line": 3,
+      "site": "left",
+      "text": "fib({n}) 执行第 3 行，先算加号左边 fib({m})：本层转入等待，返回地址指向「第 3 行 加号左侧」。"
+    },
+    {
+      "id": "fillLeft",
+      "line": 3,
+      "text": "fib({m}) 的 {value} 落进 fib({n}) 的左槽（局部变量 a = {value}），fib({n}) 接着算右槽 fib({m2})。"
+    },
+    {
+      "id": "callRight",
+      "line": 3,
+      "site": "right",
+      "text": "fib({n}) 开始算加号右边 fib({m})：返回地址指向「第 3 行 加号右侧」。左槽里已经存着 a = {a}。"
+    },
+    {
+      "id": "fillRight",
+      "line": 3,
+      "text": "右槽也填好了：a = {a}，b = {b}。两个槽都满，fib({n}) 才能做加法。"
+    },
+    {
+      "id": "sum",
+      "line": 3,
+      "text": "fib({n}) = {a} + {b} = {sum}：本层算出 {sum}，卡片变成已返回，等着被父调用取走。"
+    },
+    {
+      "id": "ask",
+      "line": 3,
+      "text": "fib({child}) 刚刚 return {value}。程序停在这里：它该回到代码的哪一处？"
+    },
+    {
+      "id": "done",
+      "line": 4,
+      "text": "最后的 {value} 回到 main 的调用处，栈空。全程 {calls} 次调用，做了 {asks} 次返回判定。"
+    }
+  ],
+  "options": [
+    {
+      "id": "restart",
+      "line": 2,
+      "label": "函数开头，从头再执行一遍",
+      "code": "if (n <= 1) [[return n;]]"
+    },
+    {
+      "id": "left",
+      "line": 3,
+      "label": "加号左边",
+      "code": "return [[fib(n - 1)]] + fib(n - 2);"
+    },
+    {
+      "id": "right",
+      "line": 3,
+      "label": "加号右边",
+      "code": "return fib(n - 1) + [[fib(n - 2)]];"
+    }
+  ],
+  "optionWhere": "第 {line} 行 · {label}",
+  "replay": {
+    "button": "回放回溯路径",
+    "head": "回溯路径",
+    "hint": "折线从最深的帧一路回到 main，每段的标签就是那条返回地址",
+    "again": "再放一次",
+    "main": "main",
+    "depthLabel": "第 {depth} 层",
+    "segment": "第 {line} 行 {side}",
+    "segmentMain": "回到 main",
+    "node": "fib({n}) → {value}"
+  }
+}

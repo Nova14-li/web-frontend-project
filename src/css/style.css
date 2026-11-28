@@ -17,7 +17,6 @@
 body {
   margin: 0;
   background: linear-gradient(180deg, #fafbff 0%, var(--bg) 42%, #eef2fa 100%);
-  background-attachment: fixed;
   color: var(--text);
   font: 15px/1.6 "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   min-height: 100vh;
@@ -78,6 +77,9 @@ body {
   font-weight: 400;
 }
 
+/* 面板正文：各页面板里除标题栏之外的那一层，内边距一致 */
+.panel-body { padding: 14px 16px 16px; }
+
 /* ---------- 1.6 代码面板：渲染 + 当前行高亮（d1 步进 / d2 判定共用） ---------- */
 .code {
   margin: 0;
@@ -94,7 +96,6 @@ body {
   padding: 2px 14px;
   white-space: pre;
   border-left: 2px solid transparent;
-  transition: background .18s, border-color .18s;
 }
 .code li::before {
   content: counter(line);
@@ -107,7 +108,7 @@ body {
   border-left-color: var(--run);
 }
 
-/* ---------- 1.7 控件栏与按钮（播放控件，d1 / d2 共用） ---------- */
+/* ---------- 1.7 控件栏与按钮（三页共用外壳；主 / 次操作各一个类） ---------- */
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -124,17 +125,27 @@ button {
   border: 1px solid #d7deec;
   background: #fff;
   cursor: pointer;
-  transition: background .15s, border-color .15s;
 }
 button:hover:not(:disabled) { background: #f4f7ff; border-color: #bfcbe2; }
 button:disabled { opacity: .45; cursor: not-allowed; }
-button[data-act="play"] {
+
+/* 主操作：一页只有一个（d1 播放 / d2 开始演示与确认） */
+.btn-primary {
   background: #2b4573;
   border-color: #2b4573;
   color: #fff;
   font-weight: 600;
 }
-button[data-act="play"]:hover:not(:disabled) { background: #35538a; border-color: #35538a; }
+.btn-primary:hover:not(:disabled) { background: #35538a; border-color: #35538a; }
+.btn-primary:focus-visible { outline: 3px solid rgba(43, 69, 115, .28); outline-offset: 2px; }
+
+/* 次要操作：重新开始、换尺度这类什么都不改的按钮 */
+button.ghost {
+  background: #fff;
+  border-color: #cfd8e8;
+  color: #2b4573;
+  font-weight: 600;
+}
 .counter { margin-left: auto; font-size: 13px; color: var(--muted); }
 
 /* ---------- 1.8 参数输入（d1 的 n、d3 的滑块都套这个外壳） ---------- */
@@ -164,7 +175,112 @@ button[data-act="play"]:hover:not(:disabled) { background: #35538a; border-color
 .status { margin: 6px 0 0; font-size: 12.5px; color: #b0720f; }
 .status.error { color: #c0392b; }
 
-/* ---------- 1.10 公共响应式：容器、代码字号与折行、计数换行 ---------- */
+/* ---------- 1.9.1 顶部解说条：一句话随单步更新（d1 / d2 共用） ---------- */
+.narration {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  min-height: 46px;
+  border: 1px solid #f2e2c4;
+  border-left: 3px solid var(--run);
+  border-radius: 0 10px 10px 0;
+  background: #fffaef;
+  font-size: 15px;
+}
+
+/* ---------- 1.10 调用栈与栈帧卡片（d1 步进 / d2 判定共用基础样式） ---------- */
+/* column-reverse 让数组第一项（栈底）落在下方，栈顶自然在上，帧向上生长 */
+.stack {
+  margin: 0;
+  padding: 14px;
+  list-style: none;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  min-height: 300px;
+}
+
+/* 栈底基线：column-reverse 下 ::before 是首个元素，正好贴在最下方 */
+.stack::before {
+  content: "栈底";
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #a3aec0;
+}
+
+/* --h / --l 由 JS 按深度写入，越深色相越冷（蓝 → 靛）、底色越实 */
+.frame {
+  --h: 210;
+  --l: 97%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: hsl(var(--h) 68% var(--l));
+  border: 1px solid hsl(var(--h) 40% 86%);
+  border-left: 3px solid var(--wait);
+}
+.frame.state-run  { border-left-color: var(--run); }
+.frame.state-done { border-left-color: var(--done); }
+
+.frame-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font: 14px/1.4 "Cascadia Code", Consolas, monospace;
+}
+.frame-note { margin: 4px 0 0; font-size: 13px; color: #45526b; }
+.frame-ret  { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+.frame-value {
+  margin: 4px 0 0;
+  font: 600 12.5px/1.4 "Cascadia Code", Consolas, monospace;
+  color: #0d7a51;
+}
+
+/* 帧状态徽章：文字来自 JSON 的 states 映射 */
+.badge {
+  font: 600 11.5px/1 "Segoe UI", sans-serif;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--wait);
+  white-space: nowrap;
+}
+.state-run  .badge { background: #c47c11; }
+.state-done .badge { background: #0d8a5a; }
+
+/* 栈顶角标：底色与卡片相同，压住卡片上边框，看起来像贴了张标签 */
+.frame.top { position: relative; }
+.frame.top::after {
+  content: "栈顶";
+  position: absolute;
+  top: -9px;
+  left: 12px;
+  padding: 0 6px;
+  background: hsl(var(--h) 68% var(--l));
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+/* ---------- 1.11 图例外壳（d1 帧状态 / d3 两条曲线共用，色块各页自己定色） ---------- */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.chip { display: inline-flex; align-items: center; gap: 6px; }
+.chip::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--wait);
+}
+
+/* ---------- 1.12 公共响应式：容器、代码字号与折行、计数换行 ---------- */
 @media (max-width: 760px) {
   .wrap { padding: 20px 14px 44px; }
   .code { font: 12.5px/1.9 "Cascadia Code", Consolas, monospace; }
